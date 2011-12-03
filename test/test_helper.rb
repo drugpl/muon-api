@@ -1,18 +1,25 @@
 ENV['RACK_ENV'] = 'test'
 
 require 'bundler/setup'
-require 'muon-api/application'
 require 'test/unit'
-require 'rack/test'
-require 'database_cleaner'
-require 'json'
 gem 'minitest'
 
+require 'grape'
+require 'logger'
+Grape::API.logger = Logger.new('/dev/null')
+
+require 'mongoid'
 Mongoid.configure do |c|
   c.master = Mongo::Connection.new.db("muon_api_test")
   c.allow_dynamic_fields = false
 end
 
+require 'database_cleaner'
+DatabaseCleaner.strategy = :truncation
+
+require 'rack/test'
+require 'json'
+require 'muon-api/application'
 class TestClient
   include MiniTest::Assertions
 
