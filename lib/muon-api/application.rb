@@ -1,22 +1,27 @@
 require 'muon-api/models'
+require 'muon-api/presenters'
 require 'grape'
 
 module Muon
   module API
     class Application < Grape::API
+      include Muon::API
       # version 'v1', using: :header, vendor: 'muon', format: :json
 
       resource :time_entries do
         get '/' do
-          Muon::API::TimeEntry.all
+          entries = Model::TimeEntry.all.to_a
+          present entries, with: Presenter::TimeEntry
         end
 
         post '/' do
-          Muon::API::TimeEntry.create(params)
+          entry = Model::TimeEntry.create(params)
+          present entry, with: Presenter::TimeEntry
         end
 
         get '/:id' do
-          Muon::API::TimeEntry.find(params[:id])
+          entry = Model::TimeEntry.find(params[:id])
+          present entry, with: Presenter::TimeEntry
         end
       end
     end

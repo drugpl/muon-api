@@ -10,6 +10,7 @@ gem 'minitest'
 
 Mongoid.configure do |c|
   c.master = Mongo::Connection.new.db("muon_api_test")
+  c.allow_dynamic_fields = false
 end
 
 class TestClient
@@ -23,6 +24,13 @@ class TestClient
 
   def get(*args)
     rack_test.get(*args)
+    response = JsonResponse.new(rack_test.last_response)
+    yield response if block_given?
+    response
+  end
+
+  def post(*args)
+    rack_test.post(*args)
     response = JsonResponse.new(rack_test.last_response)
     yield response if block_given?
     response
