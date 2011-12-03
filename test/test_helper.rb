@@ -29,18 +29,10 @@ class TestClient
     self.rack_test = ::TestClient::RackTest.new
   end
 
-  def get(*args)
-    rack_test.get(*args)
-    response = JsonResponse.new(rack_test.last_response)
-    yield response if block_given?
-    response
-  end
-
-  def post(*args)
-    rack_test.post(*args)
-    response = JsonResponse.new(rack_test.last_response)
-    yield response if block_given?
-    response
+  %w(get post put delete).each do |method|
+    define_method(method) do |path, params={}, headers={}|
+      JsonResponse.new(rack_test.send(method, path, params, headers))
+    end
   end
 
   class RackTest
@@ -60,7 +52,9 @@ class TestClient
     end
 
     def body
-      @body ||= JSON.parse(@response.body)
+      @body ||= begin
+        @response.body.empty?? @response.body : JSON.parse(@response.body)
+      end
     end
   end
 end
