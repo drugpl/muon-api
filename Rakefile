@@ -1,6 +1,14 @@
 #!/usr/bin/env rake
 require "bundler/gem_tasks"
 
+$: << './lib'
+require 'muon-api/application'
+
+desc 'Show API routes'
+task :routes do
+  puts Muon::API::Application.routes.join("\n")
+end
+
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |t|
   t.libs << 'lib'
