@@ -3,6 +3,7 @@ ENV['RACK_ENV'] = 'test'
 require 'bundler/setup'
 require 'test/unit'
 gem 'minitest'
+require 'timecop'
 
 require 'grape'
 require 'logger'
