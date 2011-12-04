@@ -23,6 +23,18 @@ module Muon
           entry = Model::TimeEntry.find(params[:id])
           present entry, with: Presenter::TimeEntry
         end
+
+        put '/:id' do
+          entry = Model::TimeEntry.find(params[:id])
+          entry.update_attributes(params)
+          present entry, with: Presenter::TimeEntry
+        end
+
+        delete '/:id' do
+          entry = Model::TimeEntry.find(params[:id])
+          entry.destroy
+          status 204
+        end
       end
     end
   end
