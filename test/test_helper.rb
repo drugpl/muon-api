@@ -46,7 +46,7 @@ class TestClient
 
   class JsonResponse
     attr_reader :response
-    delegate :status, to: :response
+    delegate :status, :headers, to: :response
 
     def initialize(response)
       @response = response

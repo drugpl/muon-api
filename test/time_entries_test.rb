@@ -13,6 +13,7 @@ class TimeEntriesTest < Muon::API::TestCase
     params = valid_params
     @client.post("/time_entries", params).tap do |response|
       assert_equal 201, response.status
+      assert_equal "http://example.org/time_entries/#{response.body['id']}", response.headers['Location']
       response.body.tap do |entry|
         assert_equal params[:description], entry['description']
         assert_equal params[:amount], entry['amount']

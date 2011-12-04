@@ -17,6 +17,7 @@ module Muon
         post '/' do
           entry = Model::TimeEntry.create(params)
           present entry, with: Presenter::TimeEntry
+          header "Location", "#{File.join(request.url, entry.id.to_s)}"
         end
 
         get '/:id' do
