@@ -6,7 +6,7 @@ module Muon
   module API
     class Application < Grape::API
       include Muon::API
-      # version 'v1', using: :header, vendor: 'muon', format: :json
+      version 'v1', using: :header, vendor: 'muon', format: :json
 
       resource :time_entries do
         get '/' do

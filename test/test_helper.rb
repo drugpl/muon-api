@@ -24,15 +24,16 @@ require 'muon-api/application'
 class TestClient
   include MiniTest::Assertions
 
-  attr_accessor :rack_test
+  attr_accessor :rack_test, :default_headers
 
-  def initialize
-    self.rack_test = ::TestClient::RackTest.new
+  def initialize(headers = {})
+    self.rack_test       = ::TestClient::RackTest.new
+    self.default_headers = headers
   end
 
   %w(get post put delete).each do |method|
     define_method(method) do |path, params={}, headers={}|
-      JsonResponse.new(rack_test.send(method, path, params, headers))
+      JsonResponse.new(rack_test.send(method, path, params, default_headers.merge(headers)))
     end
   end
 
@@ -62,7 +63,8 @@ end
 
 class Muon::API::TestCase < MiniTest::Unit::TestCase
   def setup
-    @client = TestClient.new
+    headers = {'HTTP_ACCEPT' => 'application/vnd.muon-v1+json'}
+    @client = TestClient.new(headers)
   end
 
   def teardown
